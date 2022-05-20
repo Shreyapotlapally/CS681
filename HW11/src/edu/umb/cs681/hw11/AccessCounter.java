@@ -6,32 +6,31 @@ import java.util.Map;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class AccessCounter {
-	
-	private Map<java.nio.file.Path, Integer> mapHashMap = new HashMap<java.nio.file.Path, Integer>();
+	private Map<java.nio.file.Path, Integer> mHashMap = new HashMap<java.nio.file.Path, Integer>();
 	private ReentrantLock lock = new ReentrantLock();
-	private static ReentrantLock staticLock = new ReentrantLock();
+	private static ReentrantLock staticlock = new ReentrantLock();
 	private static AccessCounter instance = null;
 	private AccessCounter() {};	
 	
 	public static AccessCounter getInstance() {
-		staticLock.lock();
+		staticlock.lock();
 		try {
 			if (instance == null)
 				instance = new AccessCounter();
 			return instance;
 		}
 		finally {
-			staticLock.unlock();
+			staticlock.unlock();
 		}
 	}
 	
 	public void increment(Path path) {
 		lock.lock();
 		try {
-			if (mapHashMap.get(path) != null)
-				mapHashMap.put(path, mapHashMap.get(path) + 1);
+			if (mHashMap.get(path) != null)
+				mHashMap.put(path, mHashMap.get(path) + 1);
 			else 
-				mapHashMap.put(path, 1);
+				mHashMap.put(path, 1);
 		}
 		finally {
 			lock.unlock();
@@ -41,8 +40,8 @@ public class AccessCounter {
 	public int getCount(Path path) {
 		lock.lock();
 		try {
-			if (mapHashMap.get(path) != null)
-				return mapHashMap.get(path);
+			if (mHashMap.get(path) != null)
+				return mHashMap.get(path);
 			else
 				return 0;
 		}
